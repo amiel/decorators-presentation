@@ -10,13 +10,12 @@
 ## How's this? ##
 
     @@@ html
-    <div id="cart">
-      <% if cart.value.zero? %>
-        <span class="empty">empty</span>
-      <% else %>
-        <%= number_to_currency cart.value %>
-      <% end %>
-    </div>
+    <dl>
+      <dt>Role</dt>
+      <dd>
+        <% @user.role.humanize if @user.role %>
+      </dd>
+    </dl>
 
 !SLIDE small
 
@@ -34,11 +33,9 @@
       </dd>
     </dl>
 
-Example from from http://railscasts.com/episodes/286-draper
-
 !SLIDE small
 
-## Or even... ##
+## or even... ##
 
     @@@ html
     <div id="profile">
@@ -52,7 +49,3 @@ Example from from http://railscasts.com/episodes/286-draper
           @user.username),
         @user.url %></h1>
       ...
-
-      
-Example from from http://railscasts.com/episodes/286-draper
-      

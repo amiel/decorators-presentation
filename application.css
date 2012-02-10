@@ -1,3 +1,8 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300,700);
+body{ font-family: 'Lato', sans-serif; font-weight: 300; }
+strong{ font-weight: 700; }
+
+
 #preso, .slide{ background: url(images/background.jpg); }
 .subsection h1{ background: #1B4F6E; }
 
