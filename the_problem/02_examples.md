@@ -2,7 +2,12 @@
 
 # The Problem #
 
+## OR, how much logic is ok in your views ##
+
+
 !SLIDE small
+
+## How's this? ##
 
     @@@ html
     <div id="cart">
@@ -29,9 +34,25 @@
       </dd>
     </dl>
 
+Example from from http://railscasts.com/episodes/286-draper
+
 !SLIDE small
 
 ## Or even... ##
 
     @@@ html
-    
+    <div id="profile">
+      <%= link_to_if @user.url.present?,
+        image_tag("avatars/#{avatar_name(@user)}",
+          class: "avatar"),
+        @user.url %>
+      <h1><%= link_to_if @user.url.present?,
+        (@user.full_name.present? ?
+          @user.full_name :
+          @user.username),
+        @user.url %></h1>
+      ...
+
+      
+Example from from http://railscasts.com/episodes/286-draper
+      
