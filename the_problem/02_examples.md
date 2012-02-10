@@ -13,7 +13,7 @@
     <dl>
       <dt>Role</dt>
       <dd>
-        <% @user.role.humanize if @user.role %>
+        <%= @user.role.humanize if @user.role %>
       </dd>
     </dl>
 
@@ -21,7 +21,7 @@
 
     @@@ html
     <dl>
-      <dt>Url:</dt>
+      <dt>URL</dt>
       <dd>
         <% if @user.url.present? %>
           <%= link_to @user.url, @user.url %>
