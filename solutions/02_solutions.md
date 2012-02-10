@@ -10,11 +10,14 @@
     class User < ActiveRecord::Base
       ROLES = %w(admin user)
       # ...
+      
       def humanize_role
         I18n.t role,
           scope: :user, default: role.humanize
       end
     end
+    
+Not too bad, but `#humanize_role` is a display-related method
 
 !SLIDE small
 
@@ -22,6 +25,21 @@
 
     @@@ ruby
     module UserHelpers
+      def user_role(user)
+        I18n.t user.role,
+          scope: :user, default: user.role.humanize
+      end
+      
+      def display_user_role(user)
+        if user.role
+          user_role(user)
+        else
+          content_tag :span, 'None', class: 'empty'
+        end
+      end
+    end
+
+<!-- 
       def user_url(user)
         if @user.url.present?
           link_to @user.url, @user.url
@@ -30,22 +48,22 @@
             "None given", class: 'empty'
         end
       end
-    end
+ -->
 
 !SLIDE small
 
-## What happened to an object-oriented approach?
+## But what happened to an object-oriented approach?
 
     @@@ ruby
     module UserHelpers
+      def user_role(user)
+        # ...
+      end
+
       def user_url(user)
         # ...
       end
-      
-      def user_full_name(user)
-        # ...
-      end
-      
+
       def user_avatar(user)
         # ...
       end
