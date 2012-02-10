@@ -11,4 +11,4 @@ My name is
 
 I work at
 
-![Carnes Media](/file/images/logo.png)
+![Carnes Media](logo.png)
