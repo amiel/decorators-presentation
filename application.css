@@ -1,2 +1,7 @@
 #preso, .slide{ background: url(images/background.jpg); }
 .subsection h1{ background: #1B4F6E; }
+
+pre.sh_sourceCode{ background: rgba(255, 255, 255, 0.5); }
+
+
+/*pre.sh_sourceCode{ background: rgba(27, 79, 110, ); }*/

@@ -7,9 +7,8 @@ My name is
 
 ## Amiel Martin ##
 
-
 !SLIDE
 
 I work at
 
-![Carnes Media](/file/images/cmlogo.png)
+![Carnes Media](/file/images/logo.png)
