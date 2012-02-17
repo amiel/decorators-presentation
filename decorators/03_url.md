@@ -1,5 +1,14 @@
 !SLIDE small
 
+## View
+
+    @@@ html
+    <dl>
+      <dt>URL</dt>
+      <dd><%= @user.url %></dd>
+    </dl>
+
+
 ## Decorator
 
     @@@ ruby
@@ -15,14 +24,3 @@
       end
     end
 
-
-!SLIDE small
-
-## View
-
-    @@@ html
-    <dl>
-      <dt>URL</dt>
-      <dd><%= @user.url %></dd>
-    </dl>
-    

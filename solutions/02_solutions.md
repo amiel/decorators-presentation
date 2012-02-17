@@ -64,7 +64,7 @@ Not too bad, but `#humanize_role` is a display-related method
         # ...
       end
 
-      def user_avatar(user)
+      def user_role_options
         # ...
       end
     end

@@ -1,5 +1,16 @@
 !SLIDE small
 
+
+## View
+
+    @@@ html
+    <dl>
+      <dt>Role</dt>
+      <dd><%= @user.role %></dd>
+    </dl>
+
+
+
 ## Decorator
 
     @@@ ruby
@@ -13,21 +24,3 @@
       end
     end
 
-
-!SLIDE small
-
-## Controller
-
-    @@@ ruby
-    def show
-      @user = UserDecorator.find params[:id]
-    end
-
-## View
-
-    @@@ html
-    <dl>
-      <dt>Role</dt>
-      <dd><%= @user.role %></dd>
-    </dl>
-    

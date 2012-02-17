@@ -1,13 +1,12 @@
 !SLIDE subsection
 
-# The Problem #
+# The Problem
 
-## OR, how much logic is ok in your views ##
-
+## View logic
 
 !SLIDE small
 
-## How's this? ##
+## Not too bad
 
     @@@ html
     <dl>
@@ -18,6 +17,8 @@
     </dl>
 
 !SLIDE small
+
+## but then...
 
     @@@ html
     <dl>
@@ -35,19 +36,20 @@
 
 !SLIDE small
 
-## or even... ##
+## or even...
 
     @@@ html
-    <div id="profile">
-      <%= link_to_if @user.url.present?,
-        image_tag("avatars/#{avatar_name(@user)}",
-          class: "avatar"),
-        @user.url %>
-      <h1>
-        <%= link_to_if @user.url.present?,
-          (@user.full_name.present? ?
-            @user.full_name :
-            @user.username),
-          @user.url %>
-      </h1>
-      ...
+    <%= f.input :role,
+      collection: User::ROLES.map { |r|
+        [r, r.humanize]
+      }
+    %>
+
+## which becomes
+
+    @@@ html
+    <%= f.input :role,
+      collection: User::ROLES.map { |r|
+        [r, I18n.t(r, default: r.humanize, ...)]
+      }
+    %>
