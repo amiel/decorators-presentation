@@ -101,10 +101,10 @@
 </div><div class="slide" data-transition="none"><div class="content subsection" ref="the_problem/02_examples/1">
 <h1>The Problem</h1>
 
-<h2>OR, how much logic is ok in your views</h2>
+<h2>View logic</h2>
 </div>
 </div><div class="slide" data-transition="none"><div class="content small" ref="the_problem/02_examples/2">
-<h2>How's this?</h2>
+<h2>Not too bad</h2>
 
 <pre class="sh_html"><code>&lt;dl&gt;
   &lt;dt&gt;Role&lt;/dt&gt;
@@ -114,6 +114,8 @@
 &lt;/dl&gt;</code></pre>
 </div>
 </div><div class="slide" data-transition="none"><div class="content small" ref="the_problem/02_examples/3">
+<h2>but then...</h2>
+
 <pre class="sh_html"><code>&lt;dl&gt;
   &lt;dt&gt;URL&lt;/dt&gt;
   &lt;dd&gt;
@@ -130,19 +132,19 @@
 </div><div class="slide" data-transition="none"><div class="content small" ref="the_problem/02_examples/4">
 <h2>or even...</h2>
 
-<pre class="sh_html"><code>&lt;div id="profile"&gt;
-  &lt;%= link_to_if @user.url.present?,
-    image_tag("avatars/#{avatar_name(@user)}",
-      class: "avatar"),
-    @user.url %&gt;
-  &lt;h1&gt;
-    &lt;%= link_to_if @user.url.present?,
-      (@user.full_name.present? ?
-        @user.full_name :
-        @user.username),
-      @user.url %&gt;
-  &lt;/h1&gt;
-  ...</code></pre>
+<pre class="sh_html"><code>&lt;%= f.input :role,
+  collection: User::ROLES.map { |r|
+    [r, r.humanize]
+  }
+%&gt;</code></pre>
+
+<h2>which becomes</h2>
+
+<pre class="sh_html"><code>&lt;%= f.input :role,
+  collection: User::ROLES.map { |r|
+    [r, I18n.t(r, default: r.humanize, ...)]
+  }
+%&gt;</code></pre>
 </div>
 </div><div class="slide" data-transition="none"><div class="content subsection" ref="solutions/02_solutions/1">
 <h1>Solutions</h1>
@@ -203,17 +205,31 @@ end</code></pre>
     # ...
   end
 
-  def user_avatar(user)
+  def user_role_options
     # ...
   end
 end</code></pre>
 </div>
-</div><div class="slide" data-transition="none"><div class="content subsection" ref="decorators/01_decorators">
-<h1>Decorators</h1>
+</div><div class="slide" data-transition="none"><div class="content subsection" ref="decorators/01_decorators/1">
+<h1>Enter Decorators</h1>
 
 <h2>with the draper gem</h2>
 </div>
-</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/02_role/1">
+</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/01_decorators/2">
+<h2>Controller</h2>
+
+<pre class="sh_ruby"><code>def show
+  @user = UserDecorator.find params[:id]
+end</code></pre>
+</div>
+</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/02_role">
+<h2>View</h2>
+
+<pre class="sh_html"><code>&lt;dl&gt;
+  &lt;dt&gt;Role&lt;/dt&gt;
+  &lt;dd&gt;&lt;%= @user.role %&gt;&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+
 <h2>Decorator</h2>
 
 <pre class="sh_ruby"><code>class UserDecorator &lt; ApplicationDecorator
@@ -226,21 +242,14 @@ end</code></pre>
   end
 end</code></pre>
 </div>
-</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/02_role/2">
-<h2>Controller</h2>
-
-<pre class="sh_ruby"><code>def show
-  @user = UserDecorator.find params[:id]
-end</code></pre>
-
+</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/03_url">
 <h2>View</h2>
 
 <pre class="sh_html"><code>&lt;dl&gt;
-  &lt;dt&gt;Role&lt;/dt&gt;
-  &lt;dd&gt;&lt;%= @user.role %&gt;&lt;/dd&gt;
+  &lt;dt&gt;URL&lt;/dt&gt;
+  &lt;dd&gt;&lt;%= @user.url %&gt;&lt;/dd&gt;
 &lt;/dl&gt;</code></pre>
-</div>
-</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/03_url/1">
+
 <h2>Decorator</h2>
 
 <pre class="sh_ruby"><code>class UserDecorator &lt; ApplicationDecorator
@@ -255,15 +264,36 @@ end</code></pre>
   end
 end</code></pre>
 </div>
-</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/03_url/2">
+</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/04_role_options/1">
 <h2>View</h2>
 
-<pre class="sh_html"><code>&lt;dl&gt;
-  &lt;dt&gt;URL&lt;/dt&gt;
-  &lt;dd&gt;&lt;%= @user.url %&gt;&lt;/dd&gt;
-&lt;/dl&gt;</code></pre>
+<pre class="sh_html"><code>&lt;%= f.input :role,
+    collection: UserDecorator.role_options
+%&gt;</code></pre>
 </div>
-</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/05_before_after/1">
+</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/04_role_options/2">
+<h2>Decorator</h2>
+
+<pre class="sh_ruby"><code>class UserDecorator &lt; ApplicationDecorator
+  decorates :user
+
+  def role
+    self.class.humanize_role model.role
+  end
+
+  def self.humanize_role(role)
+    I18n.t role, ...
+  end
+
+  def self.role_options
+    User::ROLES.map { |r| [humanize_role(r), r] }
+  end
+end</code></pre>
+</div>
+</div><div class="slide" data-transition="none"><div class="content subsection" ref="decorators/05_before_after/1">
+<h1>AWESOME</h1>
+</div>
+</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/05_before_after/2">
 <h2>Before</h2>
 
 <pre class="sh_html"><code>&lt;dl&gt;
@@ -285,7 +315,7 @@ end</code></pre>
   &lt;/dd&gt;
 &lt;/dl&gt;</code></pre>
 </div>
-</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/05_before_after/2">
+</div><div class="slide" data-transition="none"><div class="content small" ref="decorators/05_before_after/3">
 <h2>After</h2>
 
 <pre class="sh_html"><code>&lt;dl&gt;
@@ -299,21 +329,40 @@ end</code></pre>
   &lt;dd&gt;&lt;%= @user.role %&gt;&lt;/dd&gt;
 &lt;/dl&gt;</code></pre>
 </div>
-</div><div class="slide" data-transition="none"><div class="content" ref="conclusion/01">
+</div><div class="slide" data-transition="none"><div class="content smbullets incremental" ref="conclusion/01_conclusion/1">
+<p class="notes">I like this because each layer is simple and focuses on only what it needs to.</p>
+
+<h1>I like</h1>
+
+<ul>
+<li>No view logic, just templating</li>
+<li>The model isn't polluted with view methods</li>
+<li>It's not black-magic</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content subsection" ref="conclusion/01_conclusion/2">
+<h1>Also</h1>
+</div>
+</div><div class="slide" data-transition="none"><div class="content" ref="conclusion/01_conclusion/3">
 <h1>Your designer</h1>
 
 <h2>Will thank you</h2>
 </div>
-</div><div class="slide" data-transition="none"><div class="content bullets incremental" ref="conclusion/05_references">
+</div><div class="slide" data-transition="none"><div class="content" ref="conclusion/05_references">
 <h1>References</h1>
 
-<p>This presentation: http://amiel.github.com/decorators-presentation</p>
+<p>This presentation:<br/>
+<a href="http://amiel.github.com/decorators-presentation">http://amiel.github.com/decorators-presentation</a></p>
 
-<p>Some examples http://railscasts.com/episodes/286-draper</p>
+<p>Railscast with more examples:<br/>
+<a href="http://railscasts.com/episodes/286-draper">http://railscasts.com/episodes/286-draper</a></p>
 
 <!-- http://blog.carnesmedia.com/my-post-there -->
 
-<p>http://blog.amielmartin.com/post/12341219947/using-i18n-and-draper-to-render-database-attributes</p>
+<p>My blog post:<br/>
+<span style="font-size: 0.6em;">
+<a href="http://blog.amielmartin.com/post/12341219947/using-i18n-and-draper-to-render-database-attributes">http://blog.amielmartin.com/post/12341219947/using-i18n-and-draper-to-render-database-attributes</a>
+</span></p>
 </div>
 </div></div>
 
