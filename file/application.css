@@ -1,0 +1,13 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300,700);
+body{ font-family: 'Lato', sans-serif; font-weight: 300; }
+strong{ font-weight: 700; }
+
+
+#preso, .slide{ background: url(images/background.jpg); }
+.subsection h1{ background: #1B4F6E; }
+
+pre.sh_sourceCode{ background: rgba(255, 255, 255, 0.5); }
+
+.slide .content ul{ list-style: none; padding: 0; margin: 0; }
+
+/*pre.sh_sourceCode{ background: rgba(27, 79, 110, ); }*/
