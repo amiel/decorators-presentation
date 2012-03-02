@@ -7,7 +7,6 @@
 
 * No view logic, just templating
 * The model isn't polluted with view methods
-* It's not black-magic
 
 !SLIDE subsection
 
